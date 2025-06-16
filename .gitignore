@@ -1,0 +1,27 @@
+# Ignore dataset folders and large files
+dataset/
+raw_videos/
+*.zip
+*.pt
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# Env files
+.env
+*.env
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+*.tmp
