@@ -4,6 +4,10 @@ raw_videos/
 *.zip
 *.pt
 
+# Large model files (explicitly excluded from being added)
+best_lstm_model_final.pth
+model1_lstm.pth
+
 # Jupyter checkpoints
 .ipynb_checkpoints/
 
