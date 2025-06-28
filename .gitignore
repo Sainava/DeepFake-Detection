@@ -1,12 +1,17 @@
-# Ignore dataset folders and large files
+# Ignore dataset folders and raw videos
 dataset/
 raw_videos/
-*.zip
-*.pt
 
-# Large model files (explicitly excluded from being added)
-best_lstm_model_final.pth
-model1_lstm.pth
+# Ignore extracted features
+features/
+*.npy
+
+# Ignore model files
+models/
+*.pth
+
+# Compressed files
+*.zip
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
@@ -23,9 +28,15 @@ __pycache__/
 .env
 *.env
 
-# MacOS
+# MacOS system files
 .DS_Store
 
-# Logs
+# Logs and temp
 *.log
 *.tmp
+*.out
+*.txt
+results/
+
+#Ignore big tensor files
+*.pt
