@@ -40,3 +40,7 @@ results/
 
 #Ignore big tensor files
 *.pt
+
+# Ignore inference outputs
+inference/videos/
+
