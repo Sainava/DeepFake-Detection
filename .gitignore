@@ -1,8 +1,17 @@
-# Ignore dataset folders and large files
+# Ignore dataset folders and raw videos
 dataset/
 raw_videos/
+
+# Ignore extracted features
+features/
+*.npy
+
+# Ignore model files
+models/
+*.pth
+
+# Compressed files
 *.zip
-*.pt
 
 # Jupyter checkpoints
 .ipynb_checkpoints/
@@ -19,9 +28,19 @@ __pycache__/
 .env
 *.env
 
-# MacOS
+# MacOS system files
 .DS_Store
 
-# Logs
+# Logs and temp
 *.log
 *.tmp
+*.out
+*.txt
+results/
+
+#Ignore big tensor files
+*.pt
+
+# Ignore inference outputs
+inference/videos/
+
