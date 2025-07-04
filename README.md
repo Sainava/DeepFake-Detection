@@ -1,94 +1,105 @@
-# 🎭 Deepfake Detection using Video Frame Analysis (WIP)
+# Deepfake Detection 
 
-This repository contains a work-in-progress project aimed at detecting deepfake videos by analyzing sequences of extracted  features using a combination of CNNs (ResNet50) and RNNs (LSTM, GRU) with attention mechanisms. The goal is to leverage temporal patterns across frames to distinguish between real and fake videos.
-
----
-
-## 📁 Project Structure
-
-📂 NEW DEEPFAKE
-│
-├── dataset/ # New dataset (face regions from Celeb-DF)
-├── raw_videos/ # Original video sources (if needed)
-├── all_features.pt # ResNet50-extracted features from video frames
-├── all_labels.pt # Corresponding binary labels (0: real, 1: fake)
-├── *.pth # Saved trained model weights
-│
-├── extract_frames.ipynb # Frame extraction logic using ffmpeg
-├── FeatureExtraction.ipynb # Feature extractor using ResNet50
-├── Resnet50Training.ipynb # Optional: Train/finetune ResNet50 (if needed)
-├── LSTM_Deepfake_Training.ipynb
-├── enhanced_lstm.ipynb
-├── EmsembleLSTM.ipynb # Main ensemble pipeline (multiple LSTM/GRU models)
-
+This repository implements a **RGB + Optical Flow + LSTM pipeline** for deepfake video detection. It uses frame-level ResNet18 features fused with optical flow and a temporal LSTM for full sequence prediction.
 
 ---
 
-## 🧠 Model Architectures
+## 📂 Project Structure
 
-All models are fed with pre-extracted frame-level features using **ResNet50**, reducing the computational overhead of per-frame CNN processing during training.
-
-### 1. **LSTMClassifier**
-- 2-layer Bi-directional LSTM
-- Attention pooling over time dimension
-- Followed by BatchNorm and FC layers
-- Designed to capture temporal consistency and artifacts
-
-### 2. **GRUClassifier**
-- Same as above but uses GRUs instead of LSTMs
-- Chosen for lower computational cost and faster convergence
-
-### 3. **Ensemble of LSTM and GRU**
-- Multiple models with varying hidden sizes and dropout settings:
-    - `model1_lstm`: Bi-LSTM with hidden size 768
-    - `model2_lstm`: Bi-LSTM with hidden size 512
-    - `model3_gru`: Bi-GRU with hidden size 768
-- Predictions are averaged via softmax probability for more robust inference
-
----
-
-## 🔍 Why Multiple Models?
-
-This project is still under heavy experimentation and development. Multiple model variants were trained to:
-- Compare LSTM vs GRU performance
-- Evaluate the impact of hidden dimensions and dropout
-- Create an ensemble that improves generalization
-
-The ensemble approach was found to outperform individual models on the test set.
+```
+NEW_DEEPFAKE/
+├── dataset/
+│   ├── rgb/                  # RGB frames extracted from raw videos
+│   ├── optical_flow/         # Computed optical flow images
+│   ├── inference_rgb/        # RGB frames for inference
+│   ├── inference_flow/       # Optical flow for inference
+├── features/                 # Saved (T, 1024) fused features
+├── inference/
+│   ├── videos/               # Videos for final prediction (real/fake)
+│   ├── inference_notebook.ipynb # Notebook to run inference on new videos
+├── models/                   # Saved best models (MixedResNet + LSTM)
+├── raw_videos/               # Original raw videos
+├── src/
+│   ├── extract_rgb_frames.py # Extract RGB frames
+│   ├── extract_optical_flow.py # Compute optical flow frames
+│   ├── match_rgb_OpticalFlow.py # Verify RGB-Flow match
+│   ├── extract_features.py   # Extract fused features
+│   ├── train_mixed_model.py  # Train fused RGB+Flow ResNet
+│   ├── train_LSTM.py         # Train LSTM on sequences
+│   ├── train_rgb_cnn.py      # (Optional RGB only)
+│   ├── train_of_cnn.py       # (Optional Optical Flow only)
+├── utils/                    # Helper utilities
+├── README.md
+```
 
 ---
 
-## 🧪 Dataset Info
+## ✅ What Each Script Does
 
-- Current dataset: **Facial regions from Celeb-DF**
-- Every 60th frame from deepfakes and every 30th from real videos
-- Already split into `train`, `val`, and `test` (70:20:10)
-
----
-
-## 🚧 Work in Progress
-
-This repository is still under active development. Upcoming improvements:
-- Incorporation of frame-level augmentations
-- Better handling of short vs long video clips
-- Transition to lightweight models for deployment
-- Frame importance visualization (attention heatmaps)
+| File                                 | Purpose                                                     |
+| ------------------------------------ | ----------------------------------------------------------- |
+| `extract_rgb_frames.py`              | Extract 32 RGB frames per video into `dataset/rgb/`         |
+| `extract_optical_flow.py`            | Compute optical flow between consecutive frames             |
+| `match_rgb_OpticalFlow.py`           | Check for any mismatches                                    |
+| `extract_features.py`                | Run frozen MixedResNet on RGB+Flow → save (T,1024) features |
+| `train_mixed_model.py`               | Train fused RGB+Flow ResNet classifier                      |
+| `train_LSTM.py`                      | Train video-level Bi-LSTM on features                       |
+| `inference/inference_notebook.ipynb` | End-to-end prediction on new videos                         |
 
 ---
 
-## 🚀 Getting Started
+## 🚦 Pipeline Order
 
-### 1. Install dependencies
+1️⃣ **Extract RGB Frames:**
+
 ```bash
-pip install torch torchvision matplotlib
-2. Run the pipeline in order:
-extract_frames.ipynb
+python src/extract_rgb_frames.py
+```
 
-FeatureExtraction.ipynb
+2️⃣ **Compute Optical Flow:**
 
-EmsembleLSTM.ipynb
+```bash
+python src/extract_optical_flow.py
+```
 
-📌 Author
-Sainava Modak
+3️⃣ **Check Matching:**
 
-Feel free to open issues or suggest improvements!
+```bash
+python src/match_rgb_OpticalFlow.py
+```
+
+4️⃣ **Train Mixed ResNet:**
+
+```bash
+python src/train_mixed_model.py
+```
+
+5️⃣ **Extract Features:**
+
+```bash
+python src/extract_features.py
+```
+
+6️⃣ **Train LSTM:**
+
+```bash
+python src/train_LSTM.py
+```
+
+7️⃣ **Run Final Inference:**
+
+* Use `inference/inference_notebook.ipynb`
+* Place new videos in `inference/videos/real` and `inference/videos/fake`
+
+---
+
+## 📌 Author
+
+**Sainava Modak**
+
+
+---
+
+**Performance:** 97% test accuracy on seen FF++ data, \~80% on unseen CelebDF samples.
+**Architecture:** ResNet18 RGB + Optical Flow + Bi-LSTM.
+
