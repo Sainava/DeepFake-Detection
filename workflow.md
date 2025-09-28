@@ -294,7 +294,7 @@ graph LR
 
 ```mermaid
 graph LR
-    A[📹 New Videos] --> B[🔍 Frame<br/>Processing] --> C[🌊 Optical<br/>Flow] --> D[🧠 Feature<br/>Extraction] --> E[⏱️ Temporal<br/>LSTM] --> F[📊 Classification] --> G[✅ Real/Fake<br/>Result]
+    A[New Videos] --> B[Frame<br/>Processing] --> C[Optical<br/>Flow] --> D[Feature<br/>Extraction] --> E[Temporal<br/>LSTM] --> F[Classification] --> G[Real/Fake<br/>Result]
     
     style A fill:#e1f5fe
     style B fill:#f0f4c3
