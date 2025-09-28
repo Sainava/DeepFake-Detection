@@ -145,7 +145,7 @@ graph TD
     H --> I[Consecutive Frame Pairs]
     I --> J[TV-L1 Optical Flow Algorithm]
     J --> K[Flow Normalization & Clipping]
-    K --> L[3-Channel Flow Images (x, y, magnitude)]
+    K --> L[3-Channel Flow Images: x, y, magnitude]
     L --> M[31 flow images per video]
     
     G --> N[match_rgb_OpticalFlow.py]
