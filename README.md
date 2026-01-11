@@ -95,7 +95,9 @@ python src/train_LSTM.py
 
 ## 📌 Author
 
-**Sainava Modak**
+**[Sainava Modak](https://github.com/Sainava)**
+
+**[Kartik Rajput](https://github.com/Incorrectone)**
 
 
 ---
